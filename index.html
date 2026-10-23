@@ -5,55 +5,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WhatsUp Messenger</title>
+
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f0f2f5;
   color: #222;
 }
+
 header {
   background: #087f5b;
   color: white;
   padding: 24px 20px;
 }
+
 header h1 {
   margin: 0;
   font-size: 30px;
 }
+
 header p {
   margin: 8px 0 0;
   font-size: 16px;
 }
+
 .container {
   padding: 28px 18px;
   max-width: 480px;
   margin: 24px auto;
 }
+
 .card {
   background: white;
   padding: 25px 20px;
   border-radius: 18px;
   box-shadow: 0 4px 16px #00000010;
 }
+
 h2 {
   color: #087f5b;
   text-align: center;
   margin: 0 0 12px;
-  font-size: 26px;
+  font-size: 28px;
 }
+
 .subtitle {
   text-align: center;
   color: #666;
   margin-bottom: 25px;
   line-height: 1.5;
 }
+
 label {
   display: block;
   margin: 16px 0 8px;
   font-size: 16px;
 }
+
 input {
   width: 100%;
   padding: 15px;
@@ -61,10 +74,11 @@ input {
   border-radius: 10px;
   font-size: 16px;
 }
+
 button {
   width: 100%;
   padding: 15px;
-  margin-top: 20px;
+  margin-top: 18px;
   border: none;
   border-radius: 10px;
   background: #087f5b;
@@ -72,25 +86,44 @@ button {
   font-size: 17px;
   cursor: pointer;
 }
+
 .secondary {
   background: white;
   color: #087f5b;
   border: 1px solid #087f5b;
-  margin-top: 12px;
 }
+
+.forgot {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  color: #087f5b;
+  font-size: 15px;
+  text-align: right;
+}
+
 .note {
   text-align: center;
   color: #777;
   font-size: 13px;
   margin-top: 24px;
+  line-height: 1.5;
 }
+
 footer {
   text-align: center;
   color: #777;
   padding: 12px;
 }
+
+.hidden {
+  display: none;
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -100,34 +133,64 @@ footer {
 
 <div class="container">
   <div class="card">
-    <h2 id="heading">Welcome Back!</h2>
+
+    <h2 id="heading">Welcome!</h2>
+
     <p class="subtitle" id="subtitle">
       Sign in to continue to WhatsUp.
     </p>
 
-    <form id="loginForm">
+    <form id="accountForm">
+
+      <div id="nameGroup" class="hidden">
+        <label for="name">Your Name</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your name">
+      </div>
+
       <label for="email">Email Address</label>
-      <input id="email" type="email"
-        placeholder="Enter your email" required>
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+        required>
 
       <label for="password">Password</label>
-      <input id="password" type="password"
+      <input
+        id="password"
+        type="password"
         placeholder="Enter your password"
-        minlength="6" required>
+        minlength="6"
+        autocomplete="current-password"
+        required>
 
       <button type="submit" id="mainButton">
         Sign In
       </button>
+
     </form>
 
-    <button class="secondary" id="switchButton"
-      type="button">
-      Sign Up — Create New Account
+    <button
+      type="button"
+      class="forgot"
+      id="forgotButton">
+      Forgot Password?
+    </button>
+
+    <button
+      type="button"
+      class="secondary"
+      id="switchButton">
+      Create New Account
     </button>
 
     <p class="note" id="note">
-      Secure email registration will be connected later.
+      Sign in with your email and password.
     </p>
+
   </div>
 </div>
 
@@ -140,6 +203,10 @@ const heading = document.getElementById("heading");
 const subtitle = document.getElementById("subtitle");
 const mainButton = document.getElementById("mainButton");
 const switchButton = document.getElementById("switchButton");
+const forgotButton = document.getElementById("forgotButton");
+const nameGroup = document.getElementById("nameGroup");
+const nameInput = document.getElementById("name");
+const passwordInput = document.getElementById("password");
 const note = document.getElementById("note");
 
 switchButton.addEventListener("click", function() {
@@ -147,23 +214,36 @@ switchButton.addEventListener("click", function() {
 
   if (signupMode) {
     heading.textContent = "Create Account";
-    subtitle.textContent = "Sign up with your email address.";
+    subtitle.textContent = "Join WhatsUp using your email.";
     mainButton.textContent = "Sign Up";
     switchButton.textContent = "Already have an account? Sign In";
-    note.textContent = "Real account creation will be connected later.";
+    nameGroup.classList.remove("hidden");
+    nameInput.required = true;
+    passwordInput.autocomplete = "new-password";
+    forgotButton.classList.add("hidden");
+    note.textContent = "Account registration will be connected later.";
   } else {
-    heading.textContent = "Welcome Back!";
+    heading.textContent = "Welcome!";
     subtitle.textContent = "Sign in to continue to WhatsUp.";
     mainButton.textContent = "Sign In";
-    switchButton.textContent = "Sign Up — Create New Account";
-    note.textContent = "Secure email registration will be connected later.";
+    switchButton.textContent = "Create New Account";
+    nameGroup.classList.add("hidden");
+    nameInput.required = false;
+    passwordInput.autocomplete = "current-password";
+    forgotButton.classList.remove("hidden");
+    note.textContent = "Sign in with your email and password.";
   }
 });
 
-document.getElementById("loginForm").addEventListener("submit",
+forgotButton.addEventListener("click", function() {
+  alert("Password recovery will be available after Firebase is connected.");
+});
+
+document.getElementById("accountForm").addEventListener("submit",
   function(event) {
     event.preventDefault();
-    alert("Design test successful! Firebase will be connected later.");
+
+    alert("Design is ready! Real sign in and sign up will work after Firebase is connected.");
   }
 );
 </script>
