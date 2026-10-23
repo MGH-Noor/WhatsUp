@@ -1,90 +1,172 @@
 
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhatsUp Messenger</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-    }
-    header {
-      background: #087f5b;
-      color: white;
-      padding: 20px 16px;
-      font-size: 25px;
-      font-weight: bold;
-    }
-    .subtitle {
-      font-size: 13px;
-      font-weight: normal;
-      margin-top: 6px;
-    }
-    main {
-      max-width: 480px;
-      margin: 20px auto;
-      padding: 16px;
-    }
-    .panel {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px #00000010;
-    }
-    h2 { color: #087f5b; margin-top: 0; }
-    label { display: block; margin-top: 14px; }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 7px;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 13px;
-      margin-top: 18px;
-      border: 0;
-      border-radius: 7px;
-      background: #087f5b;
-      color: white;
-      font-size: 16px;
-    }
-    #message { margin-top: 15px; color: #087f5b; }
-    footer { text-align: center; color: #777; margin: 25px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsUp Messenger</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  color: #222;
+}
+header {
+  background: #087f5b;
+  color: white;
+  padding: 24px 20px;
+}
+header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+header p {
+  margin: 8px 0 0;
+  font-size: 16px;
+}
+.container {
+  padding: 28px 18px;
+  max-width: 480px;
+  margin: 24px auto;
+}
+.card {
+  background: white;
+  padding: 25px 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px #00000010;
+}
+h2 {
+  color: #087f5b;
+  text-align: center;
+  margin: 0 0 12px;
+  font-size: 26px;
+}
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+label {
+  display: block;
+  margin: 16px 0 8px;
+  font-size: 16px;
+}
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #087f5b;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
+.secondary {
+  background: white;
+  color: #087f5b;
+  border: 1px solid #087f5b;
+  margin-top: 12px;
+}
+.note {
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+  margin-top: 24px;
+}
+footer {
+  text-align: center;
+  color: #777;
+  padding: 12px;
+}
+</style>
 </head>
 <body>
-  <header>
-    WhatsUp
-    <div class="subtitle">Connect with your friends</div>
-  </header>
-  <main>
-    <section class="panel">
-      <h2>Welcome to WhatsUp</h2>
-      <p>Create your account using your email address.</p>
-      <form id="signup">
-        <label for="name">Your name</label>
-        <input id="name" type="text" placeholder="Enter your name" required>
-        <label for="email">Email address</label>
-        <input id="email" type="email" placeholder="you@example.com" required>
-        <button type="submit">Create Account</button>
-      </form>
-      <div id="message"></div>
-    </section>
-  </main>
-  <footer>WhatsUp Messenger</footer>
-  <script>
-    document.getElementById("signup").addEventListener("submit", function(event) {
-      event.preventDefault();
-      document.getElementById("message").textContent =
-        "Design test successful! Email registration needs a secure backend.";
-    });
-  </script>
+
+<header>
+  <h1>WhatsUp</h1>
+  <p>Connect with your friends</p>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h2 id="heading">Welcome Back!</h2>
+    <p class="subtitle" id="subtitle">
+      Sign in to continue to WhatsUp.
+    </p>
+
+    <form id="loginForm">
+      <label for="email">Email Address</label>
+      <input id="email" type="email"
+        placeholder="Enter your email" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password"
+        placeholder="Enter your password"
+        minlength="6" required>
+
+      <button type="submit" id="mainButton">
+        Sign In
+      </button>
+    </form>
+
+    <button class="secondary" id="switchButton"
+      type="button">
+      Sign Up — Create New Account
+    </button>
+
+    <p class="note" id="note">
+      Secure email registration will be connected later.
+    </p>
+  </div>
+</div>
+
+<footer>WhatsUp Messenger</footer>
+
+<script>
+let signupMode = false;
+
+const heading = document.getElementById("heading");
+const subtitle = document.getElementById("subtitle");
+const mainButton = document.getElementById("mainButton");
+const switchButton = document.getElementById("switchButton");
+const note = document.getElementById("note");
+
+switchButton.addEventListener("click", function() {
+  signupMode = !signupMode;
+
+  if (signupMode) {
+    heading.textContent = "Create Account";
+    subtitle.textContent = "Sign up with your email address.";
+    mainButton.textContent = "Sign Up";
+    switchButton.textContent = "Already have an account? Sign In";
+    note.textContent = "Real account creation will be connected later.";
+  } else {
+    heading.textContent = "Welcome Back!";
+    subtitle.textContent = "Sign in to continue to WhatsUp.";
+    mainButton.textContent = "Sign In";
+    switchButton.textContent = "Sign Up — Create New Account";
+    note.textContent = "Secure email registration will be connected later.";
+  }
+});
+
+document.getElementById("loginForm").addEventListener("submit",
+  function(event) {
+    event.preventDefault();
+    alert("Design test successful! Firebase will be connected later.");
+  }
+);
+</script>
+
 </body>
 </html>
