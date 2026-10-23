@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsUp Messenger</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+    }
+    header {
+      background: #087f5b;
+      color: white;
+      padding: 20px 16px;
+      font-size: 25px;
+      font-weight: bold;
+    }
+    .subtitle {
+      font-size: 13px;
+      font-weight: normal;
+      margin-top: 6px;
+    }
+    main {
+      max-width: 480px;
+      margin: 20px auto;
+      padding: 16px;
+    }
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+    h2 { color: #087f5b; margin-top: 0; }
+    label { display: block; margin-top: 14px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 7px;
+      background: #087f5b;
+      color: white;
+      font-size: 16px;
+    }
+    #message { margin-top: 15px; color: #087f5b; }
+    footer { text-align: center; color: #777; margin: 25px; }
+  </style>
+</head>
+<body>
+  <header>
+    WhatsUp
+    <div class="subtitle">Connect with your friends</div>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>Welcome to WhatsUp</h2>
+      <p>Create your account using your email address.</p>
+      <form id="signup">
+        <label for="name">Your name</label>
+        <input id="name" type="text" placeholder="Enter your name" required>
+        <label for="email">Email address</label>
+        <input id="email" type="email" placeholder="you@example.com" required>
+        <button type="submit">Create Account</button>
+      </form>
+      <div id="message"></div>
+    </section>
+  </main>
+  <footer>WhatsUp Messenger</footer>
+  <script>
+    document.getElementById("signup").addEventListener("submit", function(event) {
+      event.preventDefault();
+      document.getElementById("message").textContent =
+        "Design test successful! Email registration needs a secure backend.";
+    });
+  </script>
+</body>
+</html>
