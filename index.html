@@ -60,6 +60,29 @@
     width: 100%; padding: 12px; border: 1px solid #ccc;
     border-radius: 8px; font-size: 16px;
   }
+  
+  /* پاس ورڈ اور آنکھ کے نشان کے لیے CSS */
+  .password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-container input {
+    padding-right: 40px; /* تاکہ لکھائی آنکھ کے نشان کے نیچے نہ آئے */
+  }
+  .eye-btn {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    margin-top: 0;
+    width: auto;
+    padding: 0;
+  }
+
   .btn {
     width: 100%; padding: 14px; margin-top: 18px; border: none;
     border-radius: 8px; background: #087f5b; color: white;
@@ -156,7 +179,11 @@
         <input id="email" type="email" placeholder="Enter your email" required>
         
         <label for="password">Password</label>
-        <input id="password" type="password" placeholder="Enter your password" minlength="6" required>
+        <!-- یہاں آنکھ کا بٹن شامل کیا گیا ہے -->
+        <div class="password-container">
+          <input id="password" type="password" placeholder="Enter your password" minlength="6" required>
+          <button type="button" id="togglePassword" class="eye-btn">👁️</button>
+        </div>
 
         <button type="submit" id="mainButton" class="btn">Sign In</button>
       </form>
@@ -212,6 +239,20 @@
   const switchButton = document.getElementById("switchButton");
   const forgotButton = document.getElementById("forgotButton");
   const accountForm = document.getElementById("accountForm");
+
+  // --- پاس ورڈ آنکھ کا فنکشن ---
+  const togglePassword = document.getElementById("togglePassword");
+  const passwordInputField = document.getElementById("password");
+
+  togglePassword.addEventListener("click", function() {
+    // اگر پاس ورڈ ٹائپ ہے تو اسے ٹیکسٹ کر دیں، ورنہ واپس پاس ورڈ کر دیں
+    const type = passwordInputField.getAttribute("type") === "password" ? "text" : "password";
+    passwordInputField.setAttribute("type", type);
+    
+    // آئیکن تبدیل کریں (آنکھ کھلی/بند)
+    this.textContent = type === "password" ? "👁️" : "🙈";
+  });
+  // ------------------------------
 
   switchButton.addEventListener("click", function() {
     signupMode = !signupMode;
@@ -327,4 +368,4 @@
 
 </script>
 </body>
-</html>
+ </html>
