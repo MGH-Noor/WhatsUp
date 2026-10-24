@@ -26,71 +26,35 @@
     justify-content: space-between;
     align-items: center;
   }
-  header h1 { margin: 0; font-size: 24px; }
+  header h1 { margin: 0; font-size: 20px; }
   #logoutBtn {
     background: transparent;
     color: white;
     border: 1px solid white;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 14px;
   }
 
-  /* لینڈنگ پیج (لاگ ان/سائن اپ) */
-  #authSection {
-    padding: 20px;
-    flex: 1;
-    overflow-y: auto;
-  }
-  .container {
-    max-width: 480px;
-    margin: 20px auto;
-  }
-  .card {
-    background: white;
-    padding: 25px 20px;
-    border-radius: 18px;
-    box-shadow: 0 4px 16px #00000010;
-  }
+  /* لینڈنگ پیج */
+  #authSection { padding: 20px; flex: 1; overflow-y: auto; }
+  .container { max-width: 480px; margin: 20px auto; }
+  .card { background: white; padding: 25px 20px; border-radius: 18px; box-shadow: 0 4px 16px #00000010; }
   h2 { color: #087f5b; text-align: center; margin: 0 0 12px; }
   .subtitle { text-align: center; color: #666; margin-bottom: 25px; }
   label { display: block; margin: 16px 0 8px; font-size: 15px; font-weight: bold; }
-  input {
-    width: 100%; padding: 12px; border: 1px solid #ccc;
-    border-radius: 8px; font-size: 16px;
-  }
+  input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
   
-  /* پاس ورڈ اور آنکھ کے نشان کے لیے CSS */
-  .password-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .password-container input {
-    padding-right: 45px; /* جگہ بنائیں تاکہ آئیکن نہ چھپے */
-  }
+  .password-container { position: relative; display: flex; align-items: center; }
+  .password-container input { padding-right: 45px; }
   .eye-btn {
-    position: absolute;
-    right: 12px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    position: absolute; right: 12px; background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 0;
   }
-  /* آئیکن کے رنگ کی سیٹنگز */
-  .eye-btn svg {
-    width: 22px;
-    height: 22px;
-    stroke: #999; /* جب پاس ورڈ چھپا ہو (لائٹ بلیک/گرے) */
-    transition: 0.2s;
-  }
-  .eye-btn.active svg {
-    stroke: #087f5b; /* جب پاس ورڈ نظر آ رہا ہو (رنگین/سبز) */
-  }
+  .eye-btn svg { width: 22px; height: 22px; stroke: #999; transition: 0.2s; }
+  .eye-btn.active svg { stroke: #087f5b; }
 
   .btn {
     width: 100%; padding: 14px; margin-top: 18px; border: none;
@@ -103,68 +67,52 @@
   .note { text-align: center; color: #777; font-size: 13px; margin-top: 20px; }
   .hidden { display: none !important; }
 
-  /* چیٹ اسکرین */
-  #chatSection {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    background: #efeae2;
-    overflow: hidden;
+  /* Contacts List (Users) */
+  #contactsSection {
+    display: flex; flex-direction: column; flex: 1; overflow: hidden;
   }
-  #messagesArea {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  #usersList {
+    flex: 1; overflow-y: auto; background: white;
   }
-  .message {
-    max-width: 75%;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 15px;
-    word-wrap: break-word;
+  .user-item {
+    display: flex; align-items: center; padding: 15px 20px;
+    border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;
   }
-  .msg-my {
-    align-self: flex-end;
-    background: #d9fdd3;
-    border-bottom-right-radius: 2px;
+  .user-item:hover { background: #f9f9f9; }
+  .profile-icon {
+    width: 45px; height: 45px; background: #087f5b; color: white;
+    border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    font-size: 20px; font-weight: bold; margin-right: 15px;
   }
-  .msg-other {
-    align-self: flex-start;
-    background: white;
-    border-bottom-left-radius: 2px;
+  .user-info h3 { margin: 0; font-size: 16px; color: #222; }
+  .user-info p { margin: 3px 0 0 0; font-size: 13px; color: #777; }
+
+  /* Private Chat Section */
+  #privateChatSection {
+    display: flex; flex-direction: column; flex: 1; background: #efeae2; overflow: hidden;
   }
-  .msg-info {
-    font-size: 11px;
-    color: #888;
-    margin-top: 4px;
-    text-align: right;
+  #chatHeader {
+    background: #087f5b; color: white; padding: 10px 15px;
+    display: flex; align-items: center; border-bottom: 1px solid #066a4b;
   }
-  #chatInputArea {
-    display: flex;
-    padding: 10px;
-    background: white;
-    border-top: 1px solid #ddd;
+  #backToContacts {
+    background: transparent; border: none; color: white; font-size: 24px;
+    cursor: pointer; margin-right: 15px; padding: 0;
   }
-  #messageInput {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    margin-right: 10px;
+  #chatWithName { font-size: 18px; font-weight: bold; margin: 0; }
+  
+  #privateMessagesArea {
+    flex: 1; padding: 15px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
   }
-  #sendBtn {
-    background: #087f5b;
-    color: white;
-    border: none;
-    padding: 0 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-  }
+  .message { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 15px; word-wrap: break-word; }
+  .msg-my { align-self: flex-end; background: #d9fdd3; border-bottom-right-radius: 2px; }
+  .msg-other { align-self: flex-start; background: white; border-bottom-left-radius: 2px; }
+  .msg-info { font-size: 11px; color: #888; margin-top: 4px; text-align: right; }
+
+  #privateChatInputArea { display: flex; padding: 10px; background: white; border-top: 1px solid #ddd; }
+  #privateMessageInput { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; margin-right: 10px; }
+  #sendPrivateBtn { background: #087f5b; color: white; border: none; padding: 0 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 </style>
 </head>
 
@@ -184,21 +132,22 @@
       <p class="subtitle" id="subtitle">Sign in to continue to WhatsUp.</p>
 
       <form id="accountForm">
+        <!-- نام کا خانہ (صرف سائن اپ کے وقت نظر آئے گا) -->
+        <div id="nameGroup" class="hidden">
+          <label for="name">Your Name</label>
+          <input id="name" type="text" placeholder="Enter your name">
+        </div>
+
         <label for="email">Email Address</label>
         <input id="email" type="email" placeholder="Enter your email" required>
         
         <label for="password">Password</label>
-        <!-- یہاں آنکھ کا بٹن شامل کیا گیا ہے (SVG کے ساتھ) -->
         <div class="password-container">
           <input id="password" type="password" placeholder="Enter your password" minlength="6" required>
-          
           <button type="button" id="togglePassword" class="eye-btn">
-            <!-- آنکھ بند (کراس والا) آئیکن -->
             <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
             </svg>
-            
-            <!-- آنکھ کھلی آئیکن (ابھی چھپا ہوا ہے) -->
             <svg id="eyeOpen" class="hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -211,19 +160,32 @@
 
       <button type="button" class="forgot" id="forgotButton">Forgot Password?</button>
       <button type="button" class="secondary btn" id="switchButton">Create New Account</button>
-      <p class="note" id="note">Sign in with your email and password.</p>
     </div>
   </div>
 </div>
 
-<!-- 2. چیٹ سیکشن (لاگ ان کے بعد نظر آئے گا) -->
-<div id="chatSection" class="hidden">
-  <div id="messagesArea">
-    <!-- میسجز یہاں آئیں گے -->
+<!-- 2. یوزرز لسٹ (Contacts) -->
+<div id="contactsSection" class="hidden">
+  <div style="padding: 15px; background: white; border-bottom: 1px solid #ddd;">
+    <h2 style="margin: 0; text-align: left; font-size: 18px;">All Contacts</h2>
   </div>
-  <div id="chatInputArea">
-    <input type="text" id="messageInput" placeholder="Type a message...">
-    <button id="sendBtn">Send</button>
+  <div id="usersList">
+    <!-- صارفین کی لسٹ یہاں آئے گی -->
+  </div>
+</div>
+
+<!-- 3. پرائیویٹ چیٹ سیکشن -->
+<div id="privateChatSection" class="hidden">
+  <div id="chatHeader">
+    <button id="backToContacts">&#8592;</button>
+    <h2 id="chatWithName">Name</h2>
+  </div>
+  <div id="privateMessagesArea">
+    <!-- پرائیویٹ میسجز یہاں آئیں گے -->
+  </div>
+  <div id="privateChatInputArea">
+    <input type="text" id="privateMessageInput" placeholder="Type a message...">
+    <button id="sendPrivateBtn">Send</button>
   </div>
 </div>
 
@@ -231,7 +193,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+  // Firestore کے نئے فنکشنز شامل کیے (doc, setDoc, getDoc, where)
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, where } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBkESby5fFZmq6ZxXftqvEP7WNVuFEJstA",
@@ -246,13 +209,13 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  // UI Elements
   const authSection = document.getElementById("authSection");
-  const chatSection = document.getElementById("chatSection");
+  const contactsSection = document.getElementById("contactsSection");
+  const privateChatSection = document.getElementById("privateChatSection");
   const logoutBtn = document.getElementById("logoutBtn");
-  const messagesArea = document.getElementById("messagesArea");
-  const messageInput = document.getElementById("messageInput");
-  const sendBtn = document.getElementById("sendBtn");
   
+  // Auth Elements
   let signupMode = false;
   const heading = document.getElementById("heading");
   const subtitle = document.getElementById("subtitle");
@@ -260,31 +223,39 @@
   const switchButton = document.getElementById("switchButton");
   const forgotButton = document.getElementById("forgotButton");
   const accountForm = document.getElementById("accountForm");
+  const nameGroup = document.getElementById("nameGroup");
+  const nameInput = document.getElementById("name");
 
-  // --- پاس ورڈ آنکھ کا نیا فنکشن ---
+  // Contacts Elements
+  const usersList = document.getElementById("usersList");
+  
+  // Private Chat Elements
+  const backToContacts = document.getElementById("backToContacts");
+  const chatWithName = document.getElementById("chatWithName");
+  const privateMessagesArea = document.getElementById("privateMessagesArea");
+  const privateMessageInput = document.getElementById("privateMessageInput");
+  const sendPrivateBtn = document.getElementById("sendPrivateBtn");
+
+  let currentChatUserId = null; // کس سے چیٹ ہو رہی ہے
+  let unsubscribeMessages = null; // میسجز کو روکنے کے لیے
+
+  // --- پاس ورڈ آنکھ کا فنکشن ---
   const togglePassword = document.getElementById("togglePassword");
   const passwordInputField = document.getElementById("password");
   const eyeClosed = document.getElementById("eyeClosed");
   const eyeOpen = document.getElementById("eyeOpen");
 
   togglePassword.addEventListener("click", function() {
-    // ٹائپ چیک کریں اور تبدیل کریں
     const type = passwordInputField.getAttribute("type") === "password" ? "text" : "password";
     passwordInputField.setAttribute("type", type);
-    
-    // آئیکنز کو تبدیل کریں
     if (type === "text") {
-      eyeClosed.classList.add("hidden");
-      eyeOpen.classList.remove("hidden");
-      togglePassword.classList.add("active"); // رنگ تبدیل کرنے کے لیے
+      eyeClosed.classList.add("hidden"); eyeOpen.classList.remove("hidden"); togglePassword.classList.add("active");
     } else {
-      eyeClosed.classList.remove("hidden");
-      eyeOpen.classList.add("hidden");
-      togglePassword.classList.remove("active"); // رنگ واپس گرے کرنے کے لیے
+      eyeClosed.classList.remove("hidden"); eyeOpen.classList.add("hidden"); togglePassword.classList.remove("active");
     }
   });
-  // ------------------------------
 
+  // سائن اپ/سائن ان سوئچ
   switchButton.addEventListener("click", function() {
     signupMode = !signupMode;
     if (signupMode) {
@@ -292,27 +263,39 @@
       subtitle.textContent = "Join WhatsUp using your email.";
       mainButton.textContent = "Sign Up";
       switchButton.textContent = "Already have an account? Sign In";
+      nameGroup.classList.remove("hidden");
+      nameInput.required = true;
       forgotButton.classList.add("hidden");
     } else {
       heading.textContent = "Welcome!";
       subtitle.textContent = "Sign in to continue to WhatsUp.";
       mainButton.textContent = "Sign In";
       switchButton.textContent = "Create New Account";
+      nameGroup.classList.add("hidden");
+      nameInput.required = false;
       forgotButton.classList.remove("hidden");
     }
   });
 
+  // اکاؤنٹ بنانا / لاگ ان کرنا
   accountForm.addEventListener("submit", async function(event) {
     event.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const name = nameInput.value.trim();
     
     mainButton.disabled = true;
     mainButton.textContent = "Please wait...";
 
     try {
       if (signupMode) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        // 1. اکاؤنٹ بنائیں
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // 2. ڈیٹا بیس میں نام اور ای میل محفوظ کریں
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          name: name || email.split("@")[0],
+          email: email
+        });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -324,63 +307,122 @@
     }
   });
 
+  // لاگ آؤٹ
   logoutBtn.addEventListener("click", function() {
     signOut(auth);
+    if(unsubscribeMessages) unsubscribeMessages(); // چیٹ بند کریں
   });
 
+  // لॉگ ان/لॉگ آؤٹ کی حالت چیک کریں
   onAuthStateChanged(auth, (user) => {
     if (user) {
       authSection.classList.add("hidden");
-      chatSection.classList.remove("hidden");
+      contactsSection.classList.remove("hidden");
+      privateChatSection.classList.add("hidden"); // چیٹ بند
       logoutBtn.classList.remove("hidden");
-      loadMessages();
+      loadUsersList(); // لسٹ لوڈ کریں
     } else {
       authSection.classList.remove("hidden");
-      chatSection.classList.add("hidden");
+      contactsSection.classList.add("hidden");
+      privateChatSection.classList.add("hidden");
       logoutBtn.classList.add("hidden");
     }
   });
 
-  function loadMessages() {
-    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-    
+  // --- یوزرز کی لسٹ لوڈ کرنا ---
+  function loadUsersList() {
+    const q = query(collection(db, "users"));
     onSnapshot(q, (snapshot) => {
-      messagesArea.innerHTML = "";
-      
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const msgDiv = document.createElement("div");
-        
-        const isMe = data.uid === auth.currentUser.uid;
-        msgDiv.classList.add("message", isMe ? "msg-my" : "msg-other");
-        
-        const senderName = data.email.split("@")[0]; 
-        
-        msgDiv.innerHTML = `
-          <div style="font-size: 12px; color: #087f5b; font-weight: bold; margin-bottom: 4px;">
-            ${isMe ? 'You' : senderName}
-          </div>
-          <div>${data.text}</div>
-          <div class="msg-info">${new Date(data.timestamp?.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-        `;
-        messagesArea.appendChild(msgDiv);
+      usersList.innerHTML = "";
+      snapshot.forEach((docSnap) => {
+        const userData = docSnap.data();
+        // اپنا نام لسٹ میں مت دکھائیں
+        if (docSnap.id !== auth.currentUser.uid) {
+          const div = document.createElement("div");
+          div.classList.add("user-item");
+          
+          const initial = userData.name ? userData.name.charAt(0).toUpperCase() : "?";
+          
+          div.innerHTML = `
+            <div class="profile-icon">${initial}</div>
+            <div class="user-info">
+              <h3>${userData.name}</h3>
+              <p>${userData.email}</p>
+            </div>
+          `;
+          
+          // کلک کرنے پر چیٹ کھولیں
+          div.addEventListener("click", () => openPrivateChat(docSnap.id, userData.name));
+          usersList.appendChild(div);
+        }
       });
-      
-      messagesArea.scrollTop = messagesArea.scrollHeight;
     });
   }
 
-  async function sendMessage() {
-    const text = messageInput.value.trim();
-    if (text === "") return;
-
-    messageInput.value = "";
+  // --- پرائیویٹ چیٹ کھولنا ---
+  function openPrivateChat(receiverId, receiverName) {
+    currentChatUserId = receiverId;
+    chatWithName.textContent = receiverName;
     
+    contactsSection.classList.add("hidden");
+    privateChatSection.classList.remove("hidden");
+    
+    loadPrivateMessages();
+  }
+
+  // واپس لسٹ پر جانا
+  backToContacts.addEventListener("click", () => {
+    if(unsubscribeMessages) unsubscribeMessages(); // پرانے میسجز سننا بند کریں
+    privateChatSection.classList.add("hidden");
+    contactsSection.classList.remove("hidden");
+    privateMessagesArea.innerHTML = "";
+  });
+
+  // --- پرائیویٹ میسجز لوڈ کرنا ---
+  function loadPrivateMessages() {
+    if(unsubscribeMessages) unsubscribeMessages();
+
+    // ایک خاص ID بنائیں تاکہ دونوں صارفین کی چیٹ الگ ہو (SenderId_ReceiverId)
+    const myId = auth.currentUser.uid;
+    const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
+
+    const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+    
+    unsubscribeMessages = onSnapshot(q, (snapshot) => {
+      privateMessagesArea.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const msgDiv = document.createElement("div");
+        const isMe = data.senderId === myId;
+        
+        msgDiv.classList.add("message", isMe ? "msg-my" : "msg-other");
+        
+        const timeString = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+        
+        msgDiv.innerHTML = `
+          <div>${data.text}</div>
+          <div class="msg-info">${timeString}</div>
+        `;
+        privateMessagesArea.appendChild(msgDiv);
+      });
+      privateMessagesArea.scrollTop = privateMessagesArea.scrollHeight;
+    });
+  }
+
+  // --- پرائیویٹ میسج بھیجنا ---
+  async function sendPrivateMessage() {
+    const text = privateMessageInput.value.trim();
+    if (text === "" || !currentChatUserId) return;
+
+    privateMessageInput.value = "";
+    
+    const myId = auth.currentUser.uid;
+    const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
+
     try {
-      await addDoc(collection(db, "messages"), {
+      await addDoc(collection(db, "chats", chatId, "messages"), {
         text: text,
-        uid: auth.currentUser.uid,
-        email: auth.currentUser.email,
+        senderId: myId,
         timestamp: serverTimestamp()
       });
     } catch (error) {
@@ -388,12 +430,11 @@
     }
   }
 
-  sendBtn.addEventListener("click", sendMessage);
-
-  messageInput.addEventListener("keypress", function(event) {
+  sendPrivateBtn.addEventListener("click", sendPrivateMessage);
+  privateMessageInput.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      sendMessage();
+      sendPrivateMessage();
     }
   });
 
