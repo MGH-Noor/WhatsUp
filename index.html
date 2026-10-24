@@ -25,18 +25,29 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
   }
-  header h1 { margin: 0; font-size: 20px; }
-  #logoutBtn {
-    background: transparent;
-    color: white;
-    border: 1px solid white;
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
+  header h1 { margin: 0; font-size: 22px; }
+  
+  /* تھری ڈاٹ مینو */
+  .menu-container { position: relative; }
+  #menuBtn {
+    background: transparent; color: white; border: none; font-size: 24px;
+    cursor: pointer; padding: 0 10px;
   }
+  #dropdownMenu {
+    position: absolute; top: 35px; right: 0;
+    background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none; flex-direction: column; width: 150px; z-index: 100;
+  }
+  #dropdownMenu.show { display: flex; }
+  #dropdownMenu button {
+    background: transparent; border: none; padding: 12px 15px;
+    text-align: left; font-size: 15px; cursor: pointer; color: #222;
+    border-bottom: 1px solid #eee;
+  }
+  #dropdownMenu button:last-child { border-bottom: none; }
+  #dropdownMenu button:hover { background: #f0f2f5; }
 
   /* لینڈنگ پیج */
   #authSection { padding: 20px; flex: 1; overflow-y: auto; }
@@ -64,21 +75,32 @@
   .btn:disabled { background: #a0c4b8; cursor: not-allowed; }
   .secondary { background: white; color: #087f5b; border: 1px solid #087f5b; }
   .forgot { display: block; width: 100%; margin-top: 10px; background: transparent; border: none; color: #087f5b; text-align: right; cursor: pointer; }
-  .note { text-align: center; color: #777; font-size: 13px; margin-top: 20px; }
   .hidden { display: none !important; }
 
   /* Contacts List (Users) */
   #contactsSection {
     display: flex; flex-direction: column; flex: 1; overflow: hidden;
   }
+  
+  /* سرچ بار */
+  .search-container {
+    padding: 10px 15px; background: white; border-bottom: 1px solid #eee;
+  }
+  .search-container input {
+    width: 100%; padding: 10px 15px; border: none; background: #f0f2f5;
+    border-radius: 20px; font-size: 14px; outline: none;
+  }
+
   #usersList {
     flex: 1; overflow-y: auto; background: white;
   }
   .user-item {
-    display: flex; align-items: center; padding: 15px 20px;
-    border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s;
   }
   .user-item:hover { background: #f9f9f9; }
+  
+  .user-left { display: flex; align-items: center; }
   .profile-icon {
     width: 45px; height: 45px; background: #087f5b; color: white;
     border-radius: 50%; display: flex; justify-content: center; align-items: center;
@@ -86,6 +108,11 @@
   }
   .user-info h3 { margin: 0; font-size: 16px; color: #222; }
   .user-info p { margin: 3px 0 0 0; font-size: 13px; color: #777; }
+  
+  .unread-badge {
+    background: #25D366; color: white; font-size: 12px; font-weight: bold;
+    padding: 2px 8px; border-radius: 50%; min-width: 20px; text-align: center;
+  }
 
   /* Private Chat Section */
   #privateChatSection {
@@ -98,6 +125,12 @@
   #backToContacts {
     background: transparent; border: none; color: white; font-size: 24px;
     cursor: pointer; margin-right: 15px; padding: 0;
+  }
+  
+  .chat-header-profile {
+    width: 40px; height: 40px; background: white; color: #087f5b; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 18px; font-weight: bold; margin-right: 10px;
   }
   #chatWithName { font-size: 18px; font-weight: bold; margin: 0; }
   
@@ -121,7 +154,14 @@
 <!-- ہیڈر -->
 <header>
   <h1>WhatsUp</h1>
-  <button id="logoutBtn" class="hidden">Log Out</button>
+  <div class="menu-container">
+    <button id="menuBtn">⋮</button>
+    <div id="dropdownMenu">
+      <button id="newGroupBtn">New Group</button>
+      <button id="profileBtn">Profile</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
 </header>
 
 <!-- 1. لاگ ان / سائن اپ سیکشن -->
@@ -132,7 +172,6 @@
       <p class="subtitle" id="subtitle">Sign in to continue to WhatsUp.</p>
 
       <form id="accountForm">
-        <!-- نام کا خانہ (صرف سائن اپ کے وقت نظر آئے گا) -->
         <div id="nameGroup" class="hidden">
           <label for="name">Your Name</label>
           <input id="name" type="text" placeholder="Enter your name">
@@ -166,8 +205,8 @@
 
 <!-- 2. یوزرز لسٹ (Contacts) -->
 <div id="contactsSection" class="hidden">
-  <div style="padding: 15px; background: white; border-bottom: 1px solid #ddd;">
-    <h2 style="margin: 0; text-align: left; font-size: 18px;">All Contacts</h2>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search users...">
   </div>
   <div id="usersList">
     <!-- صارفین کی لسٹ یہاں آئے گی -->
@@ -178,11 +217,10 @@
 <div id="privateChatSection" class="hidden">
   <div id="chatHeader">
     <button id="backToContacts">&#8592;</button>
+    <div class="chat-header-profile" id="chatHeaderProfile">?</div>
     <h2 id="chatWithName">Name</h2>
   </div>
-  <div id="privateMessagesArea">
-    <!-- پرائیویٹ میسجز یہاں آئیں گے -->
-  </div>
+  <div id="privateMessagesArea"></div>
   <div id="privateChatInputArea">
     <input type="text" id="privateMessageInput" placeholder="Type a message...">
     <button id="sendPrivateBtn">Send</button>
@@ -193,8 +231,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-  // Firestore کے نئے فنکشنز شامل کیے (doc, setDoc, getDoc, where)
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, where } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, where } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBkESby5fFZmq6ZxXftqvEP7WNVuFEJstA",
@@ -213,7 +250,11 @@
   const authSection = document.getElementById("authSection");
   const contactsSection = document.getElementById("contactsSection");
   const privateChatSection = document.getElementById("privateChatSection");
+  const menuBtn = document.getElementById("menuBtn");
+  const dropdownMenu = document.getElementById("dropdownMenu");
   const logoutBtn = document.getElementById("logoutBtn");
+  const profileBtn = document.getElementById("profileBtn");
+  const newGroupBtn = document.getElementById("newGroupBtn");
   
   // Auth Elements
   let signupMode = false;
@@ -228,18 +269,30 @@
 
   // Contacts Elements
   const usersList = document.getElementById("usersList");
+  const searchInput = document.getElementById("searchInput");
+  let allUsers = []; // سرچ کے لیے تمام صارفین یہاں محفوظ ہوں گے
   
   // Private Chat Elements
   const backToContacts = document.getElementById("backToContacts");
   const chatWithName = document.getElementById("chatWithName");
+  const chatHeaderProfile = document.getElementById("chatHeaderProfile");
   const privateMessagesArea = document.getElementById("privateMessagesArea");
   const privateMessageInput = document.getElementById("privateMessageInput");
   const sendPrivateBtn = document.getElementById("sendPrivateBtn");
 
-  let currentChatUserId = null; // کس سے چیٹ ہو رہی ہے
-  let unsubscribeMessages = null; // میسجز کو روکنے کے لیے
+  let currentChatUserId = null; 
+  let unsubscribeMessages = null;
 
-  // --- پاس ورڈ آنکھ کا فنکشن ---
+  // --- مینو کا فنکشن ---
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle("show");
+  });
+  window.addEventListener("click", () => {
+    if(dropdownMenu.classList.contains("show")) dropdownMenu.classList.remove("show");
+  });
+
+  // --- آنکھ کا فنکشن ---
   const togglePassword = document.getElementById("togglePassword");
   const passwordInputField = document.getElementById("password");
   const eyeClosed = document.getElementById("eyeClosed");
@@ -289,9 +342,7 @@
 
     try {
       if (signupMode) {
-        // 1. اکاؤنٹ بنائیں
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // 2. ڈیٹا بیس میں نام اور ای میل محفوظ کریں
         await setDoc(doc(db, "users", userCredential.user.uid), {
           name: name || email.split("@")[0],
           email: email
@@ -310,52 +361,102 @@
   // لاگ آؤٹ
   logoutBtn.addEventListener("click", function() {
     signOut(auth);
-    if(unsubscribeMessages) unsubscribeMessages(); // چیٹ بند کریں
+    if(unsubscribeMessages) unsubscribeMessages();
+    dropdownMenu.classList.remove("show");
   });
 
-  // لॉگ ان/لॉگ آؤٹ کی حالت چیک کریں
+  // پروفائل اور نیو گروپ کے بٹن (فی الحال صرف الرٹ)
+  profileBtn.addEventListener("click", () => {
+    alert("Profile feature will be added in the next step!");
+    dropdownMenu.classList.remove("show");
+  });
+  newGroupBtn.addEventListener("click", () => {
+    alert("Group creation feature will be added in the next step!");
+    dropdownMenu.classList.remove("show");
+  });
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       authSection.classList.add("hidden");
       contactsSection.classList.remove("hidden");
-      privateChatSection.classList.add("hidden"); // چیٹ بند
-      logoutBtn.classList.remove("hidden");
-      loadUsersList(); // لسٹ لوڈ کریں
+      privateChatSection.classList.add("hidden");
+      loadUsersList(); 
     } else {
       authSection.classList.remove("hidden");
       contactsSection.classList.add("hidden");
       privateChatSection.classList.add("hidden");
-      logoutBtn.classList.add("hidden");
     }
   });
 
-  // --- یوزرز کی لسٹ لوڈ کرنا ---
+  // --- یوزرز کی لسٹ لوڈ کرنا اور سرچ ---
   function loadUsersList() {
     const q = query(collection(db, "users"));
+    
     onSnapshot(q, (snapshot) => {
-      usersList.innerHTML = "";
+      allUsers = []; // لسٹ خالی کریں
       snapshot.forEach((docSnap) => {
         const userData = docSnap.data();
-        // اپنا نام لسٹ میں مت دکھائیں
         if (docSnap.id !== auth.currentUser.uid) {
-          const div = document.createElement("div");
-          div.classList.add("user-item");
-          
-          const initial = userData.name ? userData.name.charAt(0).toUpperCase() : "?";
-          
-          div.innerHTML = `
-            <div class="profile-icon">${initial}</div>
-            <div class="user-info">
-              <h3>${userData.name}</h3>
-              <p>${userData.email}</p>
-            </div>
-          `;
-          
-          // کلک کرنے پر چیٹ کھولیں
-          div.addEventListener("click", () => openPrivateChat(docSnap.id, userData.name));
-          usersList.appendChild(div);
+          allUsers.push({ id: docSnap.id, ...userData });
         }
       });
+      renderUsers(allUsers); // لسٹ دکھائیں
+    });
+  }
+
+  // لسٹ کو سکرین پر دکھانا
+  function renderUsers(users) {
+    usersList.innerHTML = "";
+    users.forEach((userData) => {
+      const div = document.createElement("div");
+      div.classList.add("user-item");
+      
+      const initial = userData.name ? userData.name.charAt(0).toUpperCase() : "?";
+      
+      div.innerHTML = `
+        <div class="user-left">
+          <div class="profile-icon">${initial}</div>
+          <div class="user-info">
+            <h3>${userData.name}</h3>
+            <p>${userData.email}</p>
+          </div>
+        </div>
+        <div id="badge-${userData.id}"></div>
+      `;
+      
+      div.addEventListener("click", () => openPrivateChat(userData.id, userData.name));
+      usersList.appendChild(div);
+
+      // ان ریڈ میسجز چیک کریں
+      checkUnreadMessages(userData.id);
+    });
+  }
+
+  // --- سرچ فنکشن ---
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredUsers = allUsers.filter(user => 
+      user.name.toLowerCase().includes(searchTerm) || 
+      user.email.toLowerCase().includes(searchTerm)
+    );
+    renderUsers(filteredUsers);
+  });
+
+  // نہ پڑھے گئے میسجز چیک کرنے کا فنکشن
+  async function checkUnreadMessages(otherUserId) {
+    const myId = auth.currentUser.uid;
+    const chatId = myId < otherUserId ? `${myId}_${otherUserId}` : `${otherUserId}_${myId}`;
+    const badgeDiv = document.getElementById(`badge-${otherUserId}`);
+
+    const q = query(collection(db, "chats", chatId, "messages"), where("senderId", "==", otherUserId));
+    
+    onSnapshot(q, (snapshot) => {
+      const count = snapshot.size;
+      if (count > 0 && badgeDiv) {
+        badgeDiv.innerHTML = `<span class="unread-badge">${count}</span>`;
+      } else if (badgeDiv) {
+        badgeDiv.innerHTML = "";
+      }
     });
   }
 
@@ -363,6 +464,7 @@
   function openPrivateChat(receiverId, receiverName) {
     currentChatUserId = receiverId;
     chatWithName.textContent = receiverName;
+    chatHeaderProfile.textContent = receiverName.charAt(0).toUpperCase();
     
     contactsSection.classList.add("hidden");
     privateChatSection.classList.remove("hidden");
@@ -370,19 +472,18 @@
     loadPrivateMessages();
   }
 
-  // واپس لسٹ پر جانا
   backToContacts.addEventListener("click", () => {
-    if(unsubscribeMessages) unsubscribeMessages(); // پرانے میسجز سننا بند کریں
+    if(unsubscribeMessages) unsubscribeMessages(); 
     privateChatSection.classList.add("hidden");
     contactsSection.classList.remove("hidden");
     privateMessagesArea.innerHTML = "";
+    loadUsersList();
   });
 
   // --- پرائیویٹ میسجز لوڈ کرنا ---
   function loadPrivateMessages() {
     if(unsubscribeMessages) unsubscribeMessages();
 
-    // ایک خاص ID بنائیں تاکہ دونوں صارفین کی چیٹ الگ ہو (SenderId_ReceiverId)
     const myId = auth.currentUser.uid;
     const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
 
@@ -416,28 +517,4 @@
 
     privateMessageInput.value = "";
     
-    const myId = auth.currentUser.uid;
-    const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
-
-    try {
-      await addDoc(collection(db, "chats", chatId, "messages"), {
-        text: text,
-        senderId: myId,
-        timestamp: serverTimestamp()
-      });
-    } catch (error) {
-      alert("Message failed: " + error.message);
-    }
-  }
-
-  sendPrivateBtn.addEventListener("click", sendPrivateMessage);
-  privateMessageInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendPrivateMessage();
-    }
-  });
-
-</script>
-</body>
-</html>
+    const myId = auth.currentUser.u
