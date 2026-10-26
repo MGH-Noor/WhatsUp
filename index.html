@@ -105,6 +105,7 @@
     width: 45px; height: 45px; background: #087f5b; color: white;
     border-radius: 50%; display: flex; justify-content: center; align-items: center;
     font-size: 20px; font-weight: bold; margin-right: 15px;
+    background-size: cover; background-position: center;
   }
   .user-info h3 { margin: 0; font-size: 16px; color: #222; }
   .user-info p { margin: 3px 0 0 0; font-size: 13px; color: #777; }
@@ -131,6 +132,7 @@
     width: 40px; height: 40px; background: white; color: #087f5b; border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
     font-size: 18px; font-weight: bold; margin-right: 10px;
+    background-size: cover; background-position: center;
   }
   #chatWithName { font-size: 18px; font-weight: bold; margin: 0; }
   
@@ -146,6 +148,29 @@
   #privateChatInputArea { display: flex; padding: 10px; background: white; border-top: 1px solid #ddd; }
   #privateMessageInput { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; margin-right: 10px; }
   #sendPrivateBtn { background: #087f5b; color: white; border: none; padding: 0 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
+  /* پروفائل سیکشن */
+  #profileSection {
+    display: flex; flex-direction: column; flex: 1; background: white; overflow-y: auto;
+  }
+  .profile-header-bar {
+    background: #087f5b; color: white; padding: 15px 20px; display: flex; align-items: center;
+  }
+  .profile-header-bar button { background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; margin-right: 15px; }
+  .profile-content { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
+  
+  .big-profile-pic {
+    width: 120px; height: 120px; border-radius: 50%; background: #087f5b; color: white;
+    display: flex; justify-content: center; align-items: center; font-size: 50px; font-weight: bold;
+    background-size: cover; background-position: center; margin-bottom: 20px; border: 3px solid #eee;
+  }
+  
+  .profile-field { width: 100%; max-width: 400px; margin-bottom: 15px; }
+  .profile-field label { color: #666; font-size: 13px; margin-bottom: 5px; }
+  .profile-field p { margin: 0; padding: 12px; background: #f0f2f5; border-radius: 8px; font-size: 16px; font-weight: bold; }
+  
+  .profile-actions { width: 100%; max-width: 400px; margin-top: 20px; }
+  .danger-btn { background: #dc3545; color: white; }
 </style>
 </head>
 
@@ -227,11 +252,42 @@
   </div>
 </div>
 
+<!-- 4. پروفائل سیکشن -->
+<div id="profileSection" class="hidden">
+  <div class="profile-header-bar">
+    <button id="backFromProfile">&#8592;</button>
+    <h2 style="margin:0; font-size:20px;">Profile</h2>
+  </div>
+  
+  <div class="profile-content">
+    <div class="big-profile-pic" id="profilePicDisplay">?</div>
+    
+    <div style="margin-bottom: 20px;">
+      <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
+      <button type="button" class="btn secondary" style="margin-top:0; width:auto; padding:10px 20px;" onclick="document.getElementById('profilePicInput').click()">Change Picture</button>
+    </div>
+
+    <div class="profile-field">
+      <label>Name</label>
+      <p id="profileNameDisplay">Loading...</p>
+    </div>
+
+    <div class="profile-field">
+      <label>Email</label>
+      <p id="profileEmailDisplay">Loading...</p>
+    </div>
+
+    <div class="profile-actions">
+      <button id="deleteAccountBtn" class="btn danger-btn">Delete Account</button>
+    </div>
+  </div>
+</div>
+
 <!-- Firebase اور JavaScript -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, where } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, where, deleteDoc } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBkESby5fFZmq6ZxXftqvEP7WNVuFEJstA",
@@ -246,10 +302,17 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  // --- یہاں آپ کی Cloudinary کی تفصیلات ---
+  const CLOUDINARY_CLOUD_NAME = "fwcaxlvl1"; 
+  const CLOUDINARY_UPLOAD_PRESET = "WhatsUp_Uploads"; 
+  // ---------------------------------------------
+
   // UI Elements
   const authSection = document.getElementById("authSection");
   const contactsSection = document.getElementById("contactsSection");
   const privateChatSection = document.getElementById("privateChatSection");
+  const profileSection = document.getElementById("profileSection");
+  
   const menuBtn = document.getElementById("menuBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -270,7 +333,7 @@
   // Contacts Elements
   const usersList = document.getElementById("usersList");
   const searchInput = document.getElementById("searchInput");
-  let allUsers = []; // سرچ کے لیے تمام صارفین یہاں محفوظ ہوں گے
+  let allUsers = [];
   
   // Private Chat Elements
   const backToContacts = document.getElementById("backToContacts");
@@ -280,8 +343,17 @@
   const privateMessageInput = document.getElementById("privateMessageInput");
   const sendPrivateBtn = document.getElementById("sendPrivateBtn");
 
+  // Profile Elements
+  const backFromProfile = document.getElementById("backFromProfile");
+  const profileNameDisplay = document.getElementById("profileNameDisplay");
+  const profileEmailDisplay = document.getElementById("profileEmailDisplay");
+  const profilePicDisplay = document.getElementById("profilePicDisplay");
+  const profilePicInput = document.getElementById("profilePicInput");
+  const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+
   let currentChatUserId = null; 
   let unsubscribeMessages = null;
+  let currentUserData = null;
 
   // --- مینو کا فنکشن ---
   menuBtn.addEventListener("click", (e) => {
@@ -301,32 +373,21 @@
   togglePassword.addEventListener("click", function() {
     const type = passwordInputField.getAttribute("type") === "password" ? "text" : "password";
     passwordInputField.setAttribute("type", type);
-    if (type === "text") {
-      eyeClosed.classList.add("hidden"); eyeOpen.classList.remove("hidden"); togglePassword.classList.add("active");
-    } else {
-      eyeClosed.classList.remove("hidden"); eyeOpen.classList.add("hidden"); togglePassword.classList.remove("active");
-    }
+    if (type === "text") { eyeClosed.classList.add("hidden"); eyeOpen.classList.remove("hidden"); togglePassword.classList.add("active"); }
+    else { eyeClosed.classList.remove("hidden"); eyeOpen.classList.add("hidden"); togglePassword.classList.remove("active"); }
   });
 
   // سائن اپ/سائن ان سوئچ
   switchButton.addEventListener("click", function() {
     signupMode = !signupMode;
     if (signupMode) {
-      heading.textContent = "Create Account";
-      subtitle.textContent = "Join WhatsUp using your email.";
-      mainButton.textContent = "Sign Up";
-      switchButton.textContent = "Already have an account? Sign In";
-      nameGroup.classList.remove("hidden");
-      nameInput.required = true;
-      forgotButton.classList.add("hidden");
+      heading.textContent = "Create Account"; subtitle.textContent = "Join WhatsUp using your email.";
+      mainButton.textContent = "Sign Up"; switchButton.textContent = "Already have an account? Sign In";
+      nameGroup.classList.remove("hidden"); nameInput.required = true; forgotButton.classList.add("hidden");
     } else {
-      heading.textContent = "Welcome!";
-      subtitle.textContent = "Sign in to continue to WhatsUp.";
-      mainButton.textContent = "Sign In";
-      switchButton.textContent = "Create New Account";
-      nameGroup.classList.add("hidden");
-      nameInput.required = false;
-      forgotButton.classList.remove("hidden");
+      heading.textContent = "Welcome!"; subtitle.textContent = "Sign in to continue to WhatsUp.";
+      mainButton.textContent = "Sign In"; switchButton.textContent = "Create New Account";
+      nameGroup.classList.add("hidden"); nameInput.required = false; forgotButton.classList.remove("hidden");
     }
   });
 
@@ -337,15 +398,15 @@
     const password = document.getElementById("password").value;
     const name = nameInput.value.trim();
     
-    mainButton.disabled = true;
-    mainButton.textContent = "Please wait...";
+    mainButton.disabled = true; mainButton.textContent = "Please wait...";
 
     try {
       if (signupMode) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, "users", userCredential.user.uid), {
           name: name || email.split("@")[0],
-          email: email
+          email: email,
+          photoURL: "" // ابتداء میں خالی تصویر
         });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
@@ -353,8 +414,7 @@
     } catch (error) {
       alert("Error: " + error.message);
     } finally {
-      mainButton.disabled = false;
-      mainButton.textContent = signupMode ? "Sign Up" : "Sign In";
+      mainButton.disabled = false; mainButton.textContent = signupMode ? "Sign Up" : "Sign In";
     }
   });
 
@@ -365,180 +425,61 @@
     dropdownMenu.classList.remove("show");
   });
 
-  // پروفائل اور نیو گروپ کے بٹن (فی الحال صرف الرٹ)
-  profileBtn.addEventListener("click", () => {
-    alert("Profile feature will be added in the next step!");
+  // پروفائل پر جانا
+  profileBtn.addEventListener("click", async () => {
     dropdownMenu.classList.remove("show");
-  });
-  newGroupBtn.addEventListener("click", () => {
-    alert("Group creation feature will be added in the next step!");
-    dropdownMenu.classList.remove("show");
-  });
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      authSection.classList.add("hidden");
-      contactsSection.classList.remove("hidden");
-      privateChatSection.classList.add("hidden");
-      loadUsersList(); 
-    } else {
-      authSection.classList.remove("hidden");
-      contactsSection.classList.add("hidden");
-      privateChatSection.classList.add("hidden");
-    }
-  });
-
-  // --- یوزرز کی لسٹ لوڈ کرنا اور سرچ ---
-  function loadUsersList() {
-    const q = query(collection(db, "users"));
+    if(!auth.currentUser) return;
     
-    onSnapshot(q, (snapshot) => {
-      allUsers = []; // لسٹ خالی کریں
-      snapshot.forEach((docSnap) => {
-        const userData = docSnap.data();
-        if (docSnap.id !== auth.currentUser.uid) {
-          allUsers.push({ id: docSnap.id, ...userData });
-        }
-      });
-      renderUsers(allUsers); // لسٹ دکھائیں
-    });
-  }
-
-  // لسٹ کو سکرین پر دکھانا
-  function renderUsers(users) {
-    usersList.innerHTML = "";
-    users.forEach((userData) => {
-      const div = document.createElement("div");
-      div.classList.add("user-item");
+    // صارف کا ڈیٹا لوڈ کریں
+    const docRef = doc(db, "users", auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      currentUserData = docSnap.data();
+      profileNameDisplay.textContent = currentUserData.name;
+      profileEmailDisplay.textContent = currentUserData.email;
       
-      const initial = userData.name ? userData.name.charAt(0).toUpperCase() : "?";
-      
-      div.innerHTML = `
-        <div class="user-left">
-          <div class="profile-icon">${initial}</div>
-          <div class="user-info">
-            <h3>${userData.name}</h3>
-            <p>${userData.email}</p>
-          </div>
-        </div>
-        <div id="badge-${userData.id}"></div>
-      `;
-      
-      div.addEventListener("click", () => openPrivateChat(userData.id, userData.name));
-      usersList.appendChild(div);
-
-      // ان ریڈ میسجز چیک کریں
-      checkUnreadMessages(userData.id);
-    });
-  }
-
-  // --- سرچ فنکشن ---
-  searchInput.addEventListener("input", (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredUsers = allUsers.filter(user => 
-      user.name.toLowerCase().includes(searchTerm) || 
-      user.email.toLowerCase().includes(searchTerm)
-    );
-    renderUsers(filteredUsers);
-  });
-
-  // نہ پڑھے گئے میسجز چیک کرنے کا فنکشن
-  async function checkUnreadMessages(otherUserId) {
-    const myId = auth.currentUser.uid;
-    const chatId = myId < otherUserId ? `${myId}_${otherUserId}` : `${otherUserId}_${myId}`;
-    const badgeDiv = document.getElementById(`badge-${otherUserId}`);
-
-    const q = query(collection(db, "chats", chatId, "messages"), where("senderId", "==", otherUserId));
-    
-    onSnapshot(q, (snapshot) => {
-      const count = snapshot.size;
-      if (count > 0 && badgeDiv) {
-        badgeDiv.innerHTML = `<span class="unread-badge">${count}</span>`;
-      } else if (badgeDiv) {
-        badgeDiv.innerHTML = "";
+      // تصویر لوڈ کریں
+      if(currentUserData.photoURL) {
+        profilePicDisplay.style.backgroundImage = `url('${currentUserData.photoURL}')`;
+        profilePicDisplay.textContent = "";
+      } else {
+        profilePicDisplay.style.backgroundImage = "none";
+        profilePicDisplay.textContent = currentUserData.name.charAt(0).toUpperCase();
       }
-    });
-  }
+    }
 
-  // --- پرائیویٹ چیٹ کھولنا ---
-  function openPrivateChat(receiverId, receiverName) {
-    currentChatUserId = receiverId;
-    chatWithName.textContent = receiverName;
-    chatHeaderProfile.textContent = receiverName.charAt(0).toUpperCase();
-    
     contactsSection.classList.add("hidden");
-    privateChatSection.classList.remove("hidden");
-    
-    loadPrivateMessages();
-  }
-
-  backToContacts.addEventListener("click", () => {
-    if(unsubscribeMessages) unsubscribeMessages(); 
-    privateChatSection.classList.add("hidden");
-    contactsSection.classList.remove("hidden");
-    privateMessagesArea.innerHTML = "";
-    loadUsersList();
+    profileSection.classList.remove("hidden");
   });
 
-  // --- پرائیویٹ میسجز لوڈ کرنا ---
-  function loadPrivateMessages() {
-    if(unsubscribeMessages) unsubscribeMessages();
+  backFromProfile.addEventListener("click", () => {
+    profileSection.classList.add("hidden");
+    contactsSection.classList.remove("hidden");
+  });
 
-    const myId = auth.currentUser.uid;
-    const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
+  // نیو گروپ کے بٹن (فی الحال صرف الرٹ، اگلے حصے میں بنائیں گے)
+  newGroupBtn.addEventListener("click", () => {
+    alert("Group creation coming in next update!");
+    dropdownMenu.classList.remove("show");
+  });
 
-    const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-    
-    unsubscribeMessages = onSnapshot(q, (snapshot) => {
-      privateMessagesArea.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const msgDiv = document.createElement("div");
-        const isMe = data.senderId === myId;
-        
-        msgDiv.classList.add("message", isMe ? "msg-my" : "msg-other");
-        
-        const timeString = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
-        
-        msgDiv.innerHTML = `
-          <div>${data.text}</div>
-          <div class="msg-info">${timeString}</div>
-        `;
-        privateMessagesArea.appendChild(msgDiv);
-      });
-      privateMessagesArea.scrollTop = privateMessagesArea.scrollHeight;
-    });
-  }
-
-  // --- پرائیویٹ میسج بھیجنا ---
-  async function sendPrivateMessage() {
-    const text = privateMessageInput.value.trim();
-    if (text === "" || !currentChatUserId) return;
-
-    privateMessageInput.value = "";
-    
-    const myId = auth.currentUser.uid;
-    const chatId = myId < currentChatUserId ? `${myId}_${currentChatUserId}` : `${currentChatUserId}_${myId}`;
+  // --- تصویر اپ لوڈ کرنے کا فنکشن (Cloudinary) ---
+  profilePicInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
     try {
-      await addDoc(collection(db, "chats", chatId, "messages"), {
-        text: text,
-        senderId: myId,
-        timestamp: serverTimestamp()
+      profileNameDisplay.textContent = "Uploading...";
+      
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData
       });
-    } catch (error) {
-      alert("Message failed: " + error.message);
-    }
-  }
-
-  sendPrivateBtn.addEventListener("click", sendPrivateMessage);
-  privateMessageInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendPrivateMessage();
-    }
-  });
-
-</script>
-</body>
-</html>
+      const data = await response.json();
+      
+      if(data.secure_url) {
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
